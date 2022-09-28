@@ -1,0 +1,31 @@
+create view restaurant_customer_view as
+SELECT upper(customer.firstName) as f_name,restaurantdb.restaurantmenu.mealName as ml_name,restaurantdb.restaurant.name as res_name,
+restaurantdb.restaurantmenu.PriceInNis as price_nis,restaurantdb.restaurantmenu.PriceInUsd as price_usd,restaurantdb.restaurantmenu.Quantity as qty,
+(restaurantdb.restaurantmenu.PriceInNis*restaurantdb.restaurantmenu.Quantity) as totalNis,
+round((restaurantdb.restaurantmenu.PriceInNis*restaurantdb.restaurantmenu.Quantity)/3.4,2) as totalUsd
+FROM restaurantdb.customer_restaurantmenu
+join restaurantdb.customer on restaurantdb.customer.id = restaurantdb.customer_restaurantmenu.customer_id
+join restaurantdb.restaurantmenu on restaurantdb.restaurantmenu.id = restaurantdb.customer_restaurantmenu.restaurantmenu_id
+join restaurantdb.restaurant on restaurantdb.restaurant.id = restaurantdb.restaurantmenu.Restaurant_id
+;
+
+
+
+
+create view restaurant_customer_view as
+
+
+SELECT restaurantdb.restaurant.name as res_name,count(*) as num_order,
+sum(restaurantdb.restaurantmenu.PriceInNis*restaurantdb.restaurantmenu.Quantity) as totalNis,
+round(sum(restaurantdb.restaurantmenu.PriceInNis*restaurantdb.restaurantmenu.Quantity)/3.5,2) as totalUsd,
+max(restaurantdb.restaurantmenu.mealName) as ml_name
+FROM restaurantdb.customer_restaurantmenu
+join restaurantdb.customer on restaurantdb.customer.id = restaurantdb.customer_restaurantmenu.customer_id
+join restaurantdb.restaurantmenu on restaurantdb.restaurantmenu.id = restaurantdb.customer_restaurantmenu.restaurantmenu_id
+join restaurantdb.restaurant on restaurantdb.restaurant.id = restaurantdb.restaurantmenu.Restaurant_id
+group by restaurantdb.restaurant.name
+;
+
+select * from restaurant_customer_view;
+
+
